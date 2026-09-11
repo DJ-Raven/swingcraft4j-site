@@ -1,0 +1,27 @@
+[
+  {
+    "feature": "Custom JTree",
+    "description": "Drag-and-drop node reordering, hover-revealed trailing actions on each cell, and a fully custom cell editor.",
+    "status": "in-progress"
+  },
+  {
+    "feature": "Multi-line JTable Editor",
+    "description": "A custom JTable cell editor that supports editing multi-line text directly inside the table.",
+    "status": "pending"
+  },
+  {
+    "feature": "Skeleton Search Loading",
+    "description": "Animated skeleton placeholders while search results are loading, instead of a blank screen.",
+    "status": "pending"
+  },
+  {
+    "feature": "Custom HelpTooltip",
+    "description": "A reusable tooltip component with configurable placement, so tooltips can be positioned exactly where you need them.",
+    "status": "pending"
+  },
+  {
+    "feature": "Custom Graphics2D Components",
+    "description": "Custom-drawn components and simple animations built with Java's Graphics2D API.",
+    "status": "pending"
+  }
+]

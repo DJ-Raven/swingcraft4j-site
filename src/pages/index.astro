@@ -1,0 +1,69 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/global.css";
+import posts from "../data/posts.json";
+import { remoteAssetUrl } from "../lib/content-source.js";
+const sortedPosts=[...posts].sort((a,b)=>new Date(b.date).getTime()-new Date(a.date).getTime());
+const base=import.meta.env.BASE_URL.replace(/\/$/,"");
+---
+<Layout title="~/SwingCraft4j">
+<section class="hero"><div class="container hero-inner">
+<div class="command"><span class="prompt">cat</span> welcome.txt</div>
+<h1>~/SwingCraft4j<span class="accent">_</span></h1>
+<p>A collection of things I've built, learned and discovered. Technical notes, experiments and projects.</p>
+</div></section>
+<section id="posts" class="container">
+<button type="button" class="search-bar search-bar-trigger" id="open-search"><span>$</span><span class="search-bar-placeholder">search posts...</span></button>
+<div class="section-heading"><h2><span class="prompt">ls</span> posts/</h2><span class="post-count" id="post-count"></span></div>
+{sortedPosts.length ? (
+<div class="posts" id="posts-list">
+{sortedPosts.map((post)=><a class="post-card" href={`${base}/posts/${post.slug}/`} data-title={post.title.toLowerCase()} data-description={post.description.toLowerCase()} data-tags={post.tags.join(" ").toLowerCase()}>
+<img class="post-image" src={remoteAssetUrl(post.slug,"thumbnail.jpg")} alt={post.title} onload="this.style.opacity=1" onerror="window.applyThumbnailFallback(this)"/><div class="post-content"><div class="post-date">{new Date(post.date).toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric"})}</div><h2>{post.title}</h2><p>{post.description}</p><div class="tags">{post.tags.map(tag=><span class="tag">{tag}</span>)}</div></div>
+</a>)}
+</div><div class="pagination" id="pagination"></div>
+) : (
+<div class="posts-empty">
+  <p class="posts-empty-title"># No posts yet</p>
+  <p>Nothing has been published here yet — check back soon for new posts.</p>
+</div>
+)}
+</section>
+<script>
+const items=Array.from(document.querySelectorAll<HTMLElement>(".post-card"));
+const openSearch=document.querySelector<HTMLButtonElement>("#open-search")!;
+const pagination=document.querySelector<HTMLDivElement>("#pagination");
+const count=document.querySelector<HTMLSpanElement>("#post-count")!;
+const pageSize=10; let currentPage=1; const filteredItems=[...items];
+function render(){
+ if(!pagination){count.textContent="0 posts";return;}
+ const totalPages=Math.max(1,Math.ceil(filteredItems.length/pageSize));
+ if(currentPage>totalPages) currentPage=totalPages;
+ items.forEach(item=>item.style.display="none");
+ const start=(currentPage-1)*pageSize;
+ filteredItems.slice(start,start+pageSize).forEach(item=>item.style.display="grid");
+ count.textContent=filteredItems.length===0?"0 posts":`${start+1}-${Math.min(start+pageSize,filteredItems.length)} of ${filteredItems.length}`;
+ pagination.innerHTML="";
+ if(totalPages<=1)return;
+ const svgIcon=(d:string)=>`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="14" height="14" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="${d}"/></svg>`;
+ const chevronLeft=svgIcon("M15.75 19.5 8.25 12l7.5-7.5");
+ const chevronRight=svgIcon("m8.25 4.5 7.5 7.5-7.5 7.5");
+ const add=(content:string,page:number,disabled=false,active=false,label?:string)=>{
+   const b=document.createElement("button"); b.className=`page-button ${active?"active":""}`; b.disabled=disabled;
+   if(label){b.innerHTML=content;b.setAttribute("aria-label",label);} else b.textContent=content;
+   b.onclick=()=>{currentPage=page;render();document.querySelector("#posts")!.scrollIntoView({behavior:"smooth"});}; pagination.appendChild(b);
+ };
+ const addEllipsis=()=>{const s=document.createElement("span");s.className="page-ellipsis";s.textContent="…";pagination.appendChild(s);};
+ add(chevronLeft,currentPage-1,currentPage===1,false,"Previous page");
+ let last=0;
+ for(let page=1;page<=totalPages;page++){
+   if(page!==1 && page!==totalPages && Math.abs(page-currentPage)>1) continue;
+   if(last && page-last>1) addEllipsis();
+   add(String(page),page,false,page===currentPage);
+   last=page;
+ }
+ add(chevronRight,currentPage+1,currentPage===totalPages,false,"Next page");
+}
+openSearch.addEventListener("click",()=>window.openSearchOverlay());
+render();
+</script>
+</Layout>

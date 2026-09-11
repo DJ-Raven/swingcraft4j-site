@@ -1,0 +1,24 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/global.css";
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+<Layout title="~/SwingCraft4j/404" description="Page not found.">
+<section class="not-found">
+  <div class="detail-command"><span class="prompt">cd</span> {Astro.url.pathname}</div>
+  <p class="not-found-error">bash: cd: {Astro.url.pathname}: No such file or directory</p>
+  <h1>404<span class="accent">_</span></h1>
+  <p class="not-found-desc">The page you're looking for doesn't exist or was moved.</p>
+  <a class="not-found-home" href={`${base}/`}><span class="prompt">cd</span> ~</a>
+</section>
+</Layout>
+<style>
+.not-found{max-width:820px;margin:0 auto;padding:100px 20px;text-align:center}
+.not-found-error{margin:0 0 40px;color:var(--muted);font-size:13px}
+.not-found h1{margin:0;font-size:64px;color:var(--heading)}
+.not-found .accent{color:var(--green)}
+.not-found-desc{color:var(--muted);margin:12px 0 32px}
+.not-found-home{display:inline-flex;align-items:center;gap:4px;padding:10px 18px;border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px}
+.not-found-home:hover{border-color:var(--green);color:var(--green)}
+.not-found .detail-command{display:inline-block}
+</style>

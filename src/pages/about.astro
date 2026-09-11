@@ -1,0 +1,56 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/global.css";
+import Icon from "../components/Icon.astro";
+import { renderMarkdown } from "../lib/markdown.js";
+import socialLinks from "../data/social-links.json";
+import projects from "../data/projects.json";
+const markdown=await import("../content/about.md?raw").then(m=>m.default);
+const contentHtml=await renderMarkdown(markdown);
+---
+<Layout title="~/SwingCraft4j/about" description="A Java developer building open-source Swing libraries."><section class="about"><div class="detail-command"><span class="prompt">cat</span> about.md</div><h1>About me</h1><div class="prose" set:html={contentHtml}></div>
+
+<div class="section-heading"><h2><span class="prompt">ls</span> my-open-source/</h2></div>
+{projects.length ? (
+  <div class="project-table-wrap"><table class="project-table">
+    <thead><tr><th>Project</th><th>Description</th></tr></thead>
+    <tbody>
+      {projects.map((p) => (
+        <tr>
+          <td class="project-name"><a href={p.url} target="_blank" rel="noopener noreferrer">{p.name}</a></td>
+          <td class="project-description">{p.description}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table></div>
+) : null}
+
+<div class="section-heading"><h2><span class="prompt">ls</span> social/</h2></div>
+<div class="social-links">
+  {socialLinks.map((s) => (
+    <a href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.name}><Icon name={s.icon} size={14} />{s.name}</a>
+  ))}
+</div>
+</section></Layout>
+<style>
+.section-heading{margin:0 0 14px}
+.section-heading h2{margin:0;font-size:16px;color:var(--heading)}
+.section-heading .prompt{margin-right:4px}
+.project-table-wrap{margin-bottom:36px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.project-table{width:100%;table-layout:fixed;border-collapse:collapse;border-spacing:0}
+.project-table th,.project-table td{padding:10px 14px;border:1px solid var(--border);vertical-align:middle}
+.project-table thead th{border-top:0}
+.project-table tbody tr:last-child td{border-bottom:0}
+.project-table tr>*:first-child{border-left:0}
+.project-table tr>*:last-child{border-right:0}
+.project-table th{background:var(--surface);color:var(--heading);text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.03em}
+.project-table tbody tr:hover{background:var(--surface-hover)}
+.project-name{width:190px}
+.project-name a{color:var(--text);font-size:14px;font-weight:600;overflow-wrap:anywhere}
+.project-name a:hover{color:var(--green)}
+.project-description{color:var(--muted);font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.social-links{display:flex;flex-wrap:wrap;gap:8px}
+.social-links a{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:12px}
+.social-links a:hover{border-color:var(--green);color:var(--green)}
+@media(max-width:650px){.project-name{width:120px}.project-table th,.project-table td{padding:8px 10px}}
+</style>

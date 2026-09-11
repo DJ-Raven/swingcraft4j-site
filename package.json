@@ -1,0 +1,17 @@
+{
+  "name": "swingcraft4j-site",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "fetch-sponsors": "node scripts/fetch-sponsors.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.4.0",
+    "astro": "^5.13.0",
+    "marked": "^16.3.0",
+    "shiki": "^3.23.0"
+  }
+}

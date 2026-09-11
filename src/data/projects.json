@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Swing Pack",
+    "url": "https://github.com/DJ-Raven/java-swing-pack",
+    "description": "A FlatLaf-based Swing component library — pagination, date-time field, multi-select combo box."
+  },
+  {
+    "name": "Swing Modal Dialog",
+    "url": "https://github.com/DJ-Raven/swing-modal-dialog",
+    "description": "Modal dialog, toast, and drawer components for Swing, with animation and FlatLaf support."
+  },
+  {
+    "name": "Swing DateTime Picker",
+    "url": "https://github.com/DJ-Raven/swing-datetime-picker",
+    "description": "FlatLaf date and time pickers for Swing, with a date range picker and 24-hour time support."
+  },
+  {
+    "name": "Swing Color Picker",
+    "url": "https://github.com/DJ-Raven/swing-color-picker",
+    "description": "A FlatLaf color picker for Swing, with 5 selectable color model UIs."
+  }
+]
