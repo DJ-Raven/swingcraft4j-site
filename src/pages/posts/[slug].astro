@@ -26,7 +26,7 @@ const previousPost=sortedPosts[currentIndex+1];
 const nextPost=sortedPosts[currentIndex-1];
 const base=import.meta.env.BASE_URL.replace(/\/$/,"");
 ---
-<Layout title={post.title} description={post.description}>
+<Layout title={post.title} description={post.description} image={thumbnailUrl}>
 <article class="detail">
 <header class="detail-header">
 <div class="detail-command"><span class="prompt">cat</span> {post.slug}.md</div>
