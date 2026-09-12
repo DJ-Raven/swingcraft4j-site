@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Fetches public GitHub Sponsors for GITHUB_SPONSORS_LOGIN and writes src/data/sponsors.json.
-// Requires GH_SPONSORS_TOKEN (a GitHub token with at least `read:user` scope) in the environment.
+// Requires GH_SPONSORS_TOKEN (a GitHub token with at least `read:user` and `read:org` scopes) in the environment.
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
@@ -9,7 +9,7 @@ const token = process.env.GH_SPONSORS_TOKEN;
 
 if (!token) {
   console.error("Missing GH_SPONSORS_TOKEN environment variable.");
-  console.error('Set it to a GitHub token with "read:user" scope, then re-run this script.');
+  console.error('Set it to a GitHub token with "read:user" and "read:org" scopes, then re-run this script.');
   process.exit(1);
 }
 
