@@ -17,6 +17,10 @@ function addHeadingIds(html) {
   });
 }
 
+function wrapTables(html) {
+  return html.replace(/<table>/g, '<div class="table-wrap"><table>').replace(/<\/table>/g, "</table></div>");
+}
+
 export async function renderMarkdown(markdown) {
   const codeBlocks = [];
   const marked = new Marked({
@@ -39,5 +43,5 @@ export async function renderMarkdown(markdown) {
     }
     html = html.replace(`<!--code-block-${i}-->`, highlighted);
   }
-  return addHeadingIds(html);
+  return wrapTables(addHeadingIds(html));
 }
