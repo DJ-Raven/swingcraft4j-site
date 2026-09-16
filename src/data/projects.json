@@ -2,12 +2,28 @@
   {
     "name": "Swing Pack",
     "url": "https://github.com/DJ-Raven/java-swing-pack",
-    "description": "A FlatLaf-based Swing component library — pagination, date-time field, multi-select combo box."
+    "description": "A FlatLaf-based Swing component library — pagination, date-time field, multi-select combo box.",
+    "docsSlug": "swing-pack",
+    "docs": [
+      {
+        "title": "Pagination",
+        "path": "docs/components/pagination.md"
+      },
+      {
+        "title": "DateTime Field",
+        "path": "docs/components/datetime-field.md"
+      },
+      {
+        "title": "Multi-Select ComboBox",
+        "path": "docs/components/multi-select-combobox.md"
+      }
+    ]
   },
   {
     "name": "Swing Modal Dialog",
     "url": "https://github.com/DJ-Raven/swing-modal-dialog",
-    "description": "Modal dialog, toast, and drawer components for Swing, with animation and FlatLaf support."
+    "description": "Modal dialog, toast, and drawer components for Swing, with animation and FlatLaf support.",
+    "docsSlug": "modal-dialog"
   },
   {
     "name": "Swing DateTime Picker",

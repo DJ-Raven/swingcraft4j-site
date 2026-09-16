@@ -3,6 +3,20 @@ import { codeToHtml } from "shiki";
 
 const shikiThemes = { light: "github-light", dark: "github-dark" };
 
+function slugify(text) {
+  return text.toLowerCase().replace(/[^\w\- ]+/g, "").replace(/ /g, "-");
+}
+
+function addHeadingIds(html) {
+  const slugCounts = new Map();
+  return html.replace(/<h([1-6])>([\s\S]*?)<\/h\1>/g, (match, level, inner) => {
+    const slug = slugify(inner.replace(/<[^>]+>/g, ""));
+    const count = slugCounts.get(slug) || 0;
+    slugCounts.set(slug, count + 1);
+    return `<h${level} id="${count ? `${slug}-${count}` : slug}">${inner}</h${level}>`;
+  });
+}
+
 export async function renderMarkdown(markdown) {
   const codeBlocks = [];
   const marked = new Marked({
@@ -25,5 +39,5 @@ export async function renderMarkdown(markdown) {
     }
     html = html.replace(`<!--code-block-${i}-->`, highlighted);
   }
-  return html;
+  return addHeadingIds(html);
 }

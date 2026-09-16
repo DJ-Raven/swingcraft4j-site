@@ -7,17 +7,18 @@ import socialLinks from "../data/social-links.json";
 import projects from "../data/projects.json";
 const markdown=await import("../content/about.md?raw").then(m=>m.default);
 const contentHtml=await renderMarkdown(markdown);
+const base=import.meta.env.BASE_URL.replace(/\/$/,"");
 ---
 <Layout title="~/SwingCraft4j/about" description="A Java developer building open-source Swing libraries."><section class="about"><div class="detail-command"><span class="prompt">cat</span> about.md</div><h1>About me</h1><div class="prose" set:html={contentHtml}></div>
 
-<div class="section-heading"><h2><span class="prompt">ls</span> my-open-source/</h2></div>
+<div class="section-heading" id="my-open-source"><h2><span class="prompt">ls</span> my-open-source/</h2></div>
 {projects.length ? (
   <div class="project-table-wrap"><table class="project-table">
     <thead><tr><th>Project</th><th>Description</th></tr></thead>
     <tbody>
       {projects.map((p) => (
         <tr>
-          <td class="project-name"><a href={p.url} target="_blank" rel="noopener noreferrer">{p.name}</a></td>
+          <td class="project-name"><a href={p.url} target="_blank" rel="noopener noreferrer">{p.name}</a>{p.docsSlug && p.docs?.length ? <a class="project-docs-link" href={`${base}/docs/${p.docsSlug}`}>docs</a> : null}</td>
           <td class="project-description">{p.description}</td>
         </tr>
       ))}
@@ -48,9 +49,11 @@ const contentHtml=await renderMarkdown(markdown);
 .project-name{width:190px}
 .project-name a{color:var(--text);font-size:14px;font-weight:600;overflow-wrap:anywhere}
 .project-name a:hover{color:var(--green)}
+.project-name .project-docs-link{display:inline-block;margin-left:8px;padding:1px 8px;border:1px solid var(--border);border-radius:20px;color:var(--blue);font-size:12px;font-weight:600;vertical-align:middle}
+.project-name .project-docs-link:hover{border-color:var(--blue)}
 .project-description{color:var(--muted);font-size:13px;line-height:1.6;overflow-wrap:anywhere}
 .social-links{display:flex;flex-wrap:wrap;gap:8px}
 .social-links a{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:12px}
 .social-links a:hover{border-color:var(--green);color:var(--green)}
-@media(max-width:650px){.project-name{width:120px}.project-table th,.project-table td{padding:8px 10px}}
+@media(max-width:650px){.project-name{width:120px}.project-table th,.project-table td{padding:8px 10px}.project-name .project-docs-link{margin-left:7px;padding:1px 6px;font-size:11px}}
 </style>

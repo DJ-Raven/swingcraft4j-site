@@ -1,0 +1,142 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/global.css";
+import Icon from "../../components/Icon.astro";
+import { renderMarkdown } from "../../lib/markdown.js";
+import { remoteDocUrl, resolveRelativeLinks } from "../../lib/content-source.js";
+import projects from "../../data/projects.json";
+
+export function getStaticPaths() {
+  return projects
+    .filter((p) => p.docsSlug && p.docs?.length)
+    .map((p) => ({ params: { project: p.docsSlug }, props: { project: p } }));
+}
+
+const { project } = Astro.props;
+
+const tabsHtml = await Promise.all((project.docs ?? []).map(async (doc) => {
+  const id = doc.title.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const remoteUrl = remoteDocUrl(project.url, doc.path);
+  if (!remoteUrl) {
+    console.warn(`[docs] ${project.docsSlug}/${doc.path}: could not build a raw URL from project url ${project.url}`);
+    const html = await renderMarkdown(`## Content unavailable\n\nThis doc couldn't be loaded right now. Please check back later.`);
+    return { id, label: doc.title, html };
+  }
+  const raw = await fetch(remoteUrl).then(async (res) => {
+    if (!res.ok) {
+      console.warn(`[docs] ${project.docsSlug}/${doc.path}: failed to fetch ${remoteUrl} (${res.status})`);
+      return `## Content unavailable\n\nThis doc couldn't be loaded right now. Please check back later.`;
+    }
+    return res.text();
+  }).catch((err) => {
+    console.warn(`[docs] ${project.docsSlug}/${doc.path}: error fetching ${remoteUrl}: ${err.message}`);
+    return `## Content unavailable\n\nThis doc couldn't be loaded right now. Please check back later.`;
+  });
+  const cleaned = resolveRelativeLinks(raw.replace(/^\[Docs\]\([^)]*\)[^\n]*\n+/, ""), remoteUrl);
+  const html = await renderMarkdown(cleaned.replace(/^(#{1,5})\s/gm, "#$1 "));
+  return { id, label: doc.title, html };
+}));
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+<Layout title={`~/SwingCraft4j/docs/${project.docsSlug}`} description={project.description}>
+<article class="detail">
+<a class="back-link" href={`${base}/about#my-open-source`}><Icon name="arrow-left" size={14} /> all open source</a>
+<header class="detail-header">
+<div class="detail-command"><span class="prompt">cat</span> {project.docsSlug}/*.md</div>
+<h1>{project.name}</h1>
+<p class="detail-description">{project.description}</p>
+</header>
+{tabsHtml.length ? (
+<Fragment>
+<div class="doc-tabs-wrap">
+<div class="doc-tabs" role="tablist">
+{tabsHtml.map((tab, i) => (
+  <button type="button" role="tab" class="doc-tab" data-tab={tab.id} aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1}>{tab.label}</button>
+))}
+</div>
+</div>
+<div class="doc-panels">
+{tabsHtml.map((tab, i) => (
+  <div class="doc-panel prose" data-panel={tab.id} hidden={i !== 0} set:html={tab.html}></div>
+))}
+</div>
+</Fragment>
+) : (
+  <p class="docs-empty">No docs have been added for this project yet.</p>
+)}
+</article>
+</Layout>
+<script>
+const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>(".doc-tab"));
+const panels = Array.from(document.querySelectorAll<HTMLElement>(".doc-panel"));
+const scroller = document.querySelector<HTMLElement>(".doc-tabs");
+const scrollWrap = document.querySelector<HTMLElement>(".doc-tabs-wrap");
+function activate(id: string, focus = false) {
+  tabs.forEach((t) => {
+    const active = t.dataset.tab === id;
+    t.setAttribute("aria-selected", active ? "true" : "false");
+    t.tabIndex = active ? 0 : -1;
+    if (active) {
+      if (focus) t.focus();
+      t.scrollIntoView({ inline: "nearest", block: "nearest" });
+    }
+  });
+  panels.forEach((p) => { p.hidden = p.dataset.panel !== id; });
+}
+tabs.forEach((t, i) => {
+  t.addEventListener("click", () => {
+    activate(t.dataset.tab!);
+    history.replaceState(null, "", `#${t.dataset.tab}`);
+  });
+  t.addEventListener("keydown", (e) => {
+    const dir = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    if (!dir) return;
+    e.preventDefault();
+    const next = tabs[(i + dir + tabs.length) % tabs.length];
+    activate(next.dataset.tab!, true);
+    history.replaceState(null, "", `#${next.dataset.tab}`);
+  });
+});
+const initial = location.hash.replace("#", "");
+if (initial && tabs.some((t) => t.dataset.tab === initial)) activate(initial);
+
+if (scroller && scrollWrap) {
+  const updateFade = () => {
+    const max = scroller.scrollWidth - scroller.clientWidth;
+    scrollWrap.classList.toggle("can-scroll-left", scroller.scrollLeft > 4);
+    scrollWrap.classList.toggle("can-scroll-right", scroller.scrollLeft < max - 4);
+  };
+  scroller.addEventListener("scroll", updateFade, { passive: true });
+  scroller.addEventListener("wheel", (e) => {
+    if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+    if (scroller.scrollWidth <= scroller.clientWidth) return;
+    e.preventDefault();
+    scroller.scrollLeft += e.deltaY;
+  }, { passive: false });
+  window.addEventListener("resize", updateFade);
+  updateFade();
+}
+</script>
+<style>
+.back-link{display:inline-flex;align-items:center;gap:6px;margin-bottom:24px;color:var(--blue);font-size:12px}
+.back-link:hover{color:var(--green)}
+.doc-tabs-wrap{position:relative;margin-bottom:26px}
+.doc-tabs-wrap::before,.doc-tabs-wrap::after{content:"";position:absolute;top:1px;bottom:1px;width:24px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:1}
+.doc-tabs-wrap::before{left:1px;border-radius:8px 0 0 8px;background:linear-gradient(to right,var(--surface),transparent)}
+.doc-tabs-wrap::after{right:1px;border-radius:0 8px 8px 0;background:linear-gradient(to left,var(--surface),transparent)}
+.doc-tabs-wrap.can-scroll-left::before{opacity:1}
+.doc-tabs-wrap.can-scroll-right::after{opacity:1}
+.doc-tabs{display:flex;gap:2px;padding:3px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow-x:auto;scroll-behavior:smooth;scrollbar-width:none}
+.doc-tabs::-webkit-scrollbar{display:none}
+.doc-tab{display:inline-flex;align-items:center;flex-shrink:0;padding:8px 16px;background:transparent;border:0;border-radius:5px;color:var(--muted);font:inherit;font-size:13px;font-weight:600;line-height:1;white-space:nowrap;cursor:pointer;transition:color .15s,background .15s,box-shadow .15s}
+.doc-tab:hover{color:var(--text);background:var(--surface-hover)}
+.doc-tab:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.doc-tab[aria-selected="true"]{color:var(--green);background:color-mix(in srgb,var(--green) 14%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--green) 30%,transparent)}
+.doc-tab[aria-selected="true"]:hover{background:color-mix(in srgb,var(--green) 18%,transparent)}
+.doc-panel{animation:doc-panel-in .18s ease}
+.doc-panel :global(h2:first-child){margin-top:0}
+.docs-empty{color:var(--muted);font-size:13px}
+@keyframes doc-panel-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.doc-panel{animation:none}}
+@media(max-width:650px){.doc-tabs-wrap{margin-bottom:20px}.doc-tabs{gap:2px;padding:3px}.doc-tab{padding:6px 12px;font-size:12px}}
+</style>

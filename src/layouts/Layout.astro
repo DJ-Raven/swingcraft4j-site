@@ -128,12 +128,14 @@ document.addEventListener("keydown",(e)=>{
 });
 </script>
 <style is:global>
-:root{--bg:#0d1117;--bg-rgb:13,17,23;--surface:#161b22;--surface-hover:#1c2128;--text:#c9d1d9;--heading:#f0f6fc;--muted:#8b949e;--border:#30363d;--green:#3fb950;--blue:#58a6ff;--purple:#bc8cff;--code-bg:#0b0f14;--max:1050px}
-html[data-theme="light"]{--bg:#ffffff;--bg-rgb:255,255,255;--surface:#f6f8fa;--surface-hover:#eaeef2;--text:#24292f;--heading:#1b1f24;--muted:#57606a;--border:#d0d7de;--green:#1a7f37;--blue:#0969da;--purple:#8250df;--code-bg:#f6f8fa}
+:root{--bg:#0d1117;--bg-rgb:13,17,23;--surface:#161b22;--surface-hover:#1c2128;--text:#c9d1d9;--heading:#f0f6fc;--muted:#8b949e;--border:#30363d;--green:#3fb950;--blue:#58a6ff;--purple:#bc8cff;--code-bg:color-mix(in srgb,var(--surface) 60%,var(--bg) 40%);--max:1050px}
+html[data-theme="light"]{--bg:#ffffff;--bg-rgb:255,255,255;--surface:#f6f8fa;--surface-hover:#eaeef2;--text:#24292f;--heading:#1b1f24;--muted:#57606a;--border:#d0d7de;--green:#1a7f37;--blue:#0969da;--purple:#8250df;--code-bg:color-mix(in srgb,var(--surface) 60%,var(--bg) 40%)}
 .shiki,.shiki span{color:var(--shiki-dark)}
 .shiki{background-color:var(--shiki-dark-bg)}
 html[data-theme="light"] .shiki,html[data-theme="light"] .shiki span{color:var(--shiki-light)}
 html[data-theme="light"] .shiki{background-color:var(--shiki-light-bg)}
+.prose .shiki{background-color:var(--code-bg)}
+html[data-theme="light"] .prose .shiki{background-color:var(--code-bg)}
 *{box-sizing:border-box}html{height:100%;scroll-behavior:smooth;scrollbar-color:var(--border) transparent;scrollbar-width:thin}
 ::-webkit-scrollbar{width:11px;height:11px}
 ::-webkit-scrollbar-track{background:transparent}
