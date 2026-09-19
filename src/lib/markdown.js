@@ -18,7 +18,10 @@ function addHeadingIds(html) {
 }
 
 function wrapTables(html) {
-  return html.replace(/<table>/g, '<div class="table-wrap"><table>').replace(/<\/table>/g, "</table></div>");
+  return html
+    .replace(/<table>[\s\S]*?<\/table>/g, (table) => table.replace(/<code>([\s\S]*?)<\/code>/g, (_, code) => `<code>${code.replace(/\(/g, "(<wbr>")}</code>`))
+    .replace(/<table>/g, '<div class="table-wrap"><table>')
+    .replace(/<\/table>/g, "</table></div>");
 }
 
 export async function renderMarkdown(markdown) {
