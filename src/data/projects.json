@@ -23,7 +23,25 @@
     "name": "Swing Modal Dialog",
     "url": "https://github.com/DJ-Raven/swing-modal-dialog",
     "description": "Modal dialog, toast, and drawer components for Swing, with animation and FlatLaf support.",
-    "docsSlug": "modal-dialog"
+    "docsSlug": "modal-dialog",
+    "docs": [
+      {
+        "title": "Modal Dialog",
+        "path": "docs/modal-dialog.md"
+      },
+      {
+        "title": "Toast",
+        "path": "docs/toast.md"
+      },
+      {
+        "title": "Drawer",
+        "path": "docs/drawer.md"
+      },
+      {
+        "title": "Extras",
+        "path": "docs/extras.md"
+      }
+    ]
   },
   {
     "name": "Swing DateTime Picker",
