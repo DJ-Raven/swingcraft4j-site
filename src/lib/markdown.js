@@ -7,14 +7,21 @@ function slugify(text) {
   return text.toLowerCase().replace(/[^\w\- ]+/g, "").replace(/ /g, "-");
 }
 
-function addHeadingIds(html) {
+function addHeadingIds(html, idPrefix = "") {
   const slugCounts = new Map();
-  return html.replace(/<h([1-6])>([\s\S]*?)<\/h\1>/g, (match, level, inner) => {
+  const ids = new Set();
+  const withIds = html.replace(/<h([1-6])>([\s\S]*?)<\/h\1>/g, (match, level, inner) => {
     const slug = slugify(inner.replace(/<[^>]+>/g, ""));
     const count = slugCounts.get(slug) || 0;
     slugCounts.set(slug, count + 1);
-    return `<h${level} id="${count ? `${slug}-${count}` : slug}">${inner}</h${level}>`;
+    const id = count ? `${slug}-${count}` : slug;
+    ids.add(id);
+    return `<h${level} id="${idPrefix}${id}">${inner}</h${level}>`;
   });
+  // Only links to this doc's own headings get the prefix; links already aimed at another tab keep theirs.
+  return idPrefix
+    ? withIds.replace(/(<a href=")#([^"]*)"/g, (match, open, id) => (ids.has(id) ? `${open}#${idPrefix}${id}"` : match))
+    : withIds;
 }
 
 function wrapTables(html) {
@@ -24,7 +31,7 @@ function wrapTables(html) {
     .replace(/<\/table>/g, "</table></div>");
 }
 
-export async function renderMarkdown(markdown) {
+export async function renderMarkdown(markdown, { idPrefix = "" } = {}) {
   const codeBlocks = [];
   const marked = new Marked({
     renderer: {
@@ -46,5 +53,5 @@ export async function renderMarkdown(markdown) {
     }
     html = html.replace(`<!--code-block-${i}-->`, highlighted);
   }
-  return wrapTables(addHeadingIds(html));
+  return wrapTables(addHeadingIds(html, idPrefix));
 }

@@ -14,8 +14,11 @@ export function getStaticPaths() {
 
 const { project } = Astro.props;
 
+const tabId = (doc) => doc.title.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+const docTabs = new Map((project.docs ?? []).map((d) => [remoteDocUrl(project.url, d.path), tabId(d)]));
+
 const tabsHtml = await Promise.all((project.docs ?? []).map(async (doc) => {
-  const id = doc.title.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const id = tabId(doc);
   const remoteUrl = remoteDocUrl(project.url, doc.path);
   if (!remoteUrl) {
     console.warn(`[docs] ${project.docsSlug}/${doc.path}: could not build a raw URL from project url ${project.url}`);
@@ -32,8 +35,8 @@ const tabsHtml = await Promise.all((project.docs ?? []).map(async (doc) => {
     console.warn(`[docs] ${project.docsSlug}/${doc.path}: error fetching ${remoteUrl}: ${err.message}`);
     return `## Content unavailable\n\nThis doc couldn't be loaded right now. Please check back later.`;
   });
-  const cleaned = resolveRelativeLinks(raw.replace(/^\[Docs\]\([^)]*\)[^\n]*\n+/, ""), remoteUrl);
-  const html = await renderMarkdown(cleaned.replace(/^(#{1,5})\s/gm, "#$1 "));
+  const cleaned = resolveRelativeLinks(raw.replace(/^\[Docs\]\([^)]*\)[^\n]*\n+/, ""), remoteUrl, docTabs);
+  const html = await renderMarkdown(cleaned.replace(/^(#{1,5})\s/gm, "#$1 "), { idPrefix: `${id}--` });
   return { id, label: doc.title, html };
 }));
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -97,8 +100,18 @@ tabs.forEach((t, i) => {
     history.replaceState(null, "", `#${next.dataset.tab}`);
   });
 });
-const initial = location.hash.replace("#", "");
-if (initial && tabs.some((t) => t.dataset.tab === initial)) activate(initial);
+// Heading ids are prefixed "<tab>--", so a hash like "#toast--layout-option" names both the tab
+// to show and the heading to scroll to. The browser's own jump can't reach a heading inside a
+// hidden panel, so scroll once the right panel is visible.
+function openHash() {
+  const hash = decodeURIComponent(location.hash.replace("#", ""));
+  const tab = hash.split("--")[0];
+  if (!tab || !tabs.some((t) => t.dataset.tab === tab)) return;
+  activate(tab);
+  if (hash.includes("--")) document.getElementById(hash)?.scrollIntoView();
+}
+openHash();
+window.addEventListener("hashchange", openHash);
 
 if (scroller && scrollWrap) {
   const updateFade = () => {

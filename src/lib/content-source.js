@@ -13,13 +13,20 @@ export function remoteDocUrl(repoUrl, path, branch = "main") {
   return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path.replace(/^\/+/, "")}`;
 }
 
-export function resolveRelativeLinks(markdown, baseUrl) {
+// docTabs maps a sibling doc's raw URL to its tab id, so links between docs of
+// one project become in-page tab links ("#tab--heading") instead of raw URLs.
+export function resolveRelativeLinks(markdown, baseUrl, docTabs = new Map()) {
   return markdown.replace(
     /(!?\[[^\]]*\])\(([^)\s]+)(\s+"[^"]*")?\)/g,
     (match, label, url, title = "") => {
       if (/^(?:[a-z][a-z0-9+.-]*:|#|\/\/)/i.test(url)) return match;
       try {
-        return `${label}(${new URL(url, baseUrl).href}${title})`;
+        const resolved = new URL(url, baseUrl);
+        const tab = docTabs.get(resolved.origin + resolved.pathname);
+        if (tab && !label.startsWith("!")) {
+          return `${label}(#${tab}${resolved.hash ? `--${resolved.hash.slice(1)}` : ""}${title})`;
+        }
+        return `${label}(${resolved.href}${title})`;
       } catch {
         return match;
       }
