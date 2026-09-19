@@ -3,23 +3,32 @@ import Layout from "../../layouts/Layout.astro";
 import "../../styles/global.css";
 import posts from "../../data/posts.json";
 import { renderMarkdown } from "../../lib/markdown.js";
-import { remoteAssetUrl } from "../../lib/content-source.js";
+import { remoteAssetUrl, resolveRelativeLinks } from "../../lib/content-source.js";
 import Icon from "../../components/Icon.astro";
 export function getStaticPaths(){return posts.map(post=>({params:{slug:post.slug},props:{post}}));}
 const {post}=Astro.props;
-const remoteUrl=remoteAssetUrl(post.slug,"index.md");
 const thumbnailUrl=remoteAssetUrl(post.slug,"thumbnail.jpg");
-const markdown=await fetch(remoteUrl).then(async res=>{
-  if(!res.ok){
-    console.warn(`[content] ${post.slug}: failed to fetch ${remoteUrl} (${res.status})`);
-    return `## Content unavailable\n\nThis post's content couldn't be loaded right now. Please check back later.`;
+// A post folder holds its content in index.md, or in a README.md when the folder is a standalone example project.
+let remoteUrl=remoteAssetUrl(post.slug,"index.md");
+let markdown=null;
+const failures=[];
+for(const file of ["index.md","README.md"]){
+  const url=remoteAssetUrl(post.slug,file);
+  try{
+    const res=await fetch(url);
+    if(res.ok){remoteUrl=url;markdown=await res.text();break;}
+    failures.push(`failed to fetch ${url} (${res.status})`);
+  }catch(err){
+    failures.push(`error fetching ${url}: ${err instanceof Error ? err.message : err}`);
   }
-  return res.text();
-}).catch(err=>{
-  console.warn(`[content] ${post.slug}: error fetching ${remoteUrl}: ${err.message}`);
-  return `## Content unavailable\n\nThis post's content couldn't be loaded right now. Please check back later.`;
-});
-const contentHtml=await renderMarkdown(markdown);
+}
+if(markdown===null){
+  console.warn(`[content] ${post.slug}: ${failures.join("; ")}`);
+  markdown=`## Content unavailable\n\nThis post's content couldn't be loaded right now. Please check back later.`;
+}
+// The page header already shows the title, so drop a leading "# Title" that repeats it.
+const body=markdown.replace(/^#\s+(.+?)\s*\n+/,(match,heading)=>heading.trim().toLowerCase()===post.title.trim().toLowerCase()?"":match);
+const contentHtml=await renderMarkdown(resolveRelativeLinks(body,remoteUrl));
 const sortedPosts=[...posts].sort((a,b)=>new Date(b.date).getTime()-new Date(a.date).getTime());
 const currentIndex=sortedPosts.findIndex(item=>item.slug===post.slug);
 const previousPost=sortedPosts[currentIndex+1];
