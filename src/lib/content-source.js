@@ -4,6 +4,10 @@ export function remoteAssetUrl(slug, filename) {
   return `https://raw.githubusercontent.com/${contentSources.repo}/${contentSources.branch}/${slug}/${filename}`;
 }
 
+export function sourceFolderUrl(slug) {
+  return `https://github.com/${contentSources.repo}/tree/${contentSources.branch}/${slug}`;
+}
+
 export function remoteDocUrl(repoUrl, path, branch = "main") {
   const match = repoUrl.match(
     /^https:\/\/github\.com\/([^/]+)\/([^/]+?)(?:\.git)?\/?$/,
