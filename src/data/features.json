@@ -2,7 +2,7 @@
   {
     "feature": "Custom JTree",
     "description": "Drag-and-drop node reordering, hover-revealed trailing actions on each cell, and a fully custom cell editor.",
-    "status": "in-progress"
+    "status": "done"
   },
   {
     "feature": "Multi-line JTable Editor",
@@ -12,7 +12,7 @@
   {
     "feature": "Skeleton Search Loading",
     "description": "Animated skeleton placeholders while search results are loading, instead of a blank screen.",
-    "status": "pending"
+    "status": "in-progress"
   },
   {
     "feature": "Custom HelpTooltip",
