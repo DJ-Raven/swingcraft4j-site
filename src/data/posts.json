@@ -5,5 +5,12 @@
     "description": "A FlatLaf JTree with hover action icons on each row, inline rename editing, and drag-and-drop reordering.",
     "date": "2026-09-19",
     "tags": ["java", "swing", "flatlaf", "jtree", "drag-and-drop"]
+  },
+  {
+    "slug": "skeleton",
+    "title": "Skeleton",
+    "description": "A JLayer LayerUI that shows shimmering loading placeholders shaped from the real components, and blocks input while loading.",
+    "date": "2026-09-24",
+    "tags": ["java", "swing", "flatlaf", "jlayer", "loading"]
   }
 ]
