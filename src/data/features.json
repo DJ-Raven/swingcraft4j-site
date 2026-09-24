@@ -12,7 +12,7 @@
   {
     "feature": "Skeleton Search Loading",
     "description": "Animated skeleton placeholders while search results are loading, instead of a blank screen.",
-    "status": "in-progress"
+    "status": "done"
   },
   {
     "feature": "Custom HelpTooltip",
