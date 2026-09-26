@@ -12,5 +12,12 @@
     "description": "A JLayer LayerUI that shows shimmering loading placeholders shaped from the real components, and blocks input while loading.",
     "date": "2026-09-24",
     "tags": ["java", "swing", "flatlaf", "jlayer", "loading"]
+  },
+  {
+    "slug": "badge-notification",
+    "title": "Badge Notification",
+    "description": "An animated notification badge that decorates any component through a JLayer, with counts, text or dots, any corner, and an alert animation.",
+    "date": "2026-09-26",
+    "tags": ["java", "swing", "flatlaf", "jlayer", "animation"]
   }
 ]
