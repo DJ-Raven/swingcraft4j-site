@@ -51,6 +51,25 @@
   {
     "name": "Swing Color Picker",
     "url": "https://github.com/DJ-Raven/swing-color-picker",
-    "description": "A FlatLaf color picker for Swing, with 5 selectable color model UIs."
+    "description": "A FlatLaf color picker for Swing, with multiple built-in color models and support for custom models.",
+    "docsSlug": "color-picker",
+    "docs": [
+      {
+        "title": "Getting Started",
+        "path": "docs/getting-started.md"
+      },
+      {
+        "title": "Color Picker Options",
+        "path": "docs/color-picker-options.md"
+      },
+      {
+        "title": "Color Models",
+        "path": "docs/color-models.md"
+      },
+      {
+        "title": "Custom Model",
+        "path": "docs/custom-model.md"
+      }
+    ]
   }
 ]
