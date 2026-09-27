@@ -19,5 +19,12 @@
     "description": "An animated notification badge that decorates any component through a JLayer, with counts, text or dots, any corner, and an alert animation.",
     "date": "2026-09-26",
     "tags": ["java", "swing", "flatlaf", "jlayer", "animation"]
+  },
+  {
+    "slug": "loading",
+    "title": "Loading",
+    "description": "Animated loading indicators as plain Swing icons, with 27 built-in styles, custom painters, size presets and theme colors, and no start or stop calls.",
+    "date": "2026-09-27",
+    "tags": ["java", "swing", "flatlaf", "icon", "animation"]
   }
 ]
