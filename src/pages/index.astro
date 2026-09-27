@@ -4,7 +4,7 @@ import "../styles/global.css";
 import posts from "../data/posts.json";
 import { remoteAssetUrl } from "../lib/content-source.js";
 interface Post{slug:string;title:string;description:string;tags:string[];date:string}
-const sortedPosts=[...(posts as Post[])].sort((a,b)=>new Date(b.date).getTime()-new Date(a.date).getTime());
+const sortedPosts=[...(posts as Post[])].reverse().sort((a,b)=>new Date(b.date).getTime()-new Date(a.date).getTime());
 const base=import.meta.env.BASE_URL.replace(/\/$/,"");
 ---
 <Layout title="~/SwingCraft4j">

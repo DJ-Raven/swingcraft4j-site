@@ -29,7 +29,7 @@ if(markdown===null){
 // The page header already shows the title, so drop a leading "# Title" that repeats it.
 const body=markdown.replace(/^#\s+(.+?)\s*\n+/,(match,heading)=>heading.trim().toLowerCase()===post.title.trim().toLowerCase()?"":match);
 const contentHtml=await renderMarkdown(resolveRelativeLinks(body,remoteUrl));
-const sortedPosts=[...posts].sort((a,b)=>new Date(b.date).getTime()-new Date(a.date).getTime());
+const sortedPosts=[...posts].reverse().sort((a,b)=>new Date(b.date).getTime()-new Date(a.date).getTime());
 const currentIndex=sortedPosts.findIndex(item=>item.slug===post.slug);
 const previousPost=sortedPosts[currentIndex+1];
 const nextPost=sortedPosts[currentIndex-1];
