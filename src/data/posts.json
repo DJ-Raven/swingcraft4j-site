@@ -26,5 +26,12 @@
     "description": "Animated loading indicators as plain Swing icons, with 27 built-in styles, custom painters, size presets and theme colors, and no start or stop calls.",
     "date": "2026-09-27",
     "tags": ["java", "swing", "flatlaf", "icon", "animation"]
+  },
+  {
+    "slug": "switch-button",
+    "title": "Switch Button",
+    "description": "An animated switch icon for JCheckBox or JToggleButton, with 8 styles, theme-aware colors, any size, and FlatLaf style strings.",
+    "date": "2026-09-27",
+    "tags": ["java", "swing", "flatlaf", "icon", "animation"]
   }
 ]
