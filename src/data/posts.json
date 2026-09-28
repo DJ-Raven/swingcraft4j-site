@@ -40,5 +40,12 @@
     "description": "A rich tooltip for any JComponent, ported from IntelliJ, with a title, shortcut, HTML description and link, smart width, and theme-aware colors.",
     "date": "2026-09-28",
     "tags": ["java", "swing", "flatlaf", "tooltip", "popup"]
+  },
+  {
+    "slug": "liquid-progress-indicator",
+    "title": "Liquid Progress Indicator",
+    "description": "A progress component that fills circles, gauges, batteries, flasks and more with animated liquid, with dual waves, rising bubbles, two-tone text, and theme-aware colors.",
+    "date": "2026-09-28",
+    "tags": ["java", "swing", "flatlaf", "progress", "animation"]
   }
 ]
