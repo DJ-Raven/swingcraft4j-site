@@ -33,5 +33,12 @@
     "description": "An animated switch icon for JCheckBox or JToggleButton, with 8 styles, theme-aware colors, any size, and FlatLaf style strings.",
     "date": "2026-09-27",
     "tags": ["java", "swing", "flatlaf", "icon", "animation"]
+  },
+  {
+    "slug": "help-tooltip",
+    "title": "Help Tooltip",
+    "description": "A rich tooltip for any JComponent, ported from IntelliJ, with a title, shortcut, HTML description and link, smart width, and theme-aware colors.",
+    "date": "2026-09-28",
+    "tags": ["java", "swing", "flatlaf", "tooltip", "popup"]
   }
 ]

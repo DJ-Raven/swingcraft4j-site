@@ -17,7 +17,7 @@
   {
     "feature": "Custom HelpTooltip",
     "description": "A reusable tooltip component with configurable placement, so tooltips can be positioned exactly where you need them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "feature": "Custom Graphics2D Components",
