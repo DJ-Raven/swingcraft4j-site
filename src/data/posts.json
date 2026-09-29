@@ -47,5 +47,12 @@
     "description": "A progress component that fills circles, gauges, batteries, flasks and more with animated liquid, with dual waves, rising bubbles, two-tone text, and theme-aware colors.",
     "date": "2026-09-28",
     "tags": ["java", "swing", "flatlaf", "progress", "animation"]
+  },
+  {
+    "slug": "qr-code-generator",
+    "title": "QR Code Generator",
+    "description": "A QR code component with 12 body shapes, custom eye frames and balls, gradients, a center logo, and PNG or SVG export, with a headless API for servers.",
+    "date": "2026-09-30",
+    "tags": ["java", "swing", "flatlaf", "qr-code", "java2d"]
   }
 ]
